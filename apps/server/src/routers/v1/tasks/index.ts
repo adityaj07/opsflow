@@ -5,6 +5,7 @@ import {
   createTask,
   createTaskUpdate,
   getTaskById,
+  getTaskTimeline,
   getTaskUpdates,
   getTasks,
   updateTask,
@@ -25,5 +26,6 @@ tasksRouter.patch('/:taskId/assign', requireRole('MANAGER', 'ADMIN'), asyncHandl
 tasksRouter.patch('/:taskId/status', asyncHandler(changeTaskStatus));
 tasksRouter.post('/:taskId/updates', asyncHandler(createTaskUpdate));
 tasksRouter.get('/:taskId/updates', asyncHandler(getTaskUpdates));
+tasksRouter.get('/:taskId/timeline', asyncHandler(getTaskTimeline));
 
 export default tasksRouter;

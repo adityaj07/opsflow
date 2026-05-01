@@ -99,6 +99,32 @@ export const taskUpdateWithUserSchema = taskUpdateSchema.extend({
   user: taskUserSchema,
 });
 
+export const activityActionTypeSchema = z.enum([
+  'TASK_CREATED',
+  'TASK_ASSIGNED',
+  'STATUS_CHANGED',
+  'TASK_UPDATED',
+]);
+
+export const timelineLogEntrySchema = z.object({
+  type: z.literal('log'),
+  createdAt: z.string().datetime(),
+  log: z.object({
+    id: z.string().min(1),
+    actionType: activityActionTypeSchema,
+    metadata: z.unknown(),
+    user: taskUserSchema,
+  }),
+});
+
+export const timelineUpdateEntrySchema = z.object({
+  type: z.literal('update'),
+  createdAt: z.string().datetime(),
+  update: taskUpdateWithUserSchema,
+});
+
+export const taskTimelineEntrySchema = z.union([timelineLogEntrySchema, timelineUpdateEntrySchema]);
+
 export const createTaskResponseSchema = taskSchema;
 export const getTaskByIdResponseSchema = taskWithUsersSchema;
 export const updateTaskResponseSchema = taskSchema;
@@ -107,6 +133,9 @@ export const changeTaskStatusResponseSchema = taskSchema;
 export const createTaskUpdateResponseSchema = taskUpdateWithUserSchema;
 export const getTaskUpdatesResponseSchema = z.object({
   updates: z.array(taskUpdateWithUserSchema),
+});
+export const getTaskTimelineResponseSchema = z.object({
+  items: z.array(taskTimelineEntrySchema),
 });
 
 export const getTasksResponseSchema = z.object({

@@ -1,11 +1,14 @@
 import { Router } from 'express';
-import { createUser } from '@/controllers/users';
+import { createUser, getUsers } from '@/controllers/users';
 import { authMiddleware } from '@/middlewares/auth';
 import { requireRole } from '@/middlewares/rbac';
 import { asyncHandler } from '@/utils/asyncHandler';
 
 const usersRouter = Router();
 
-usersRouter.post('/', authMiddleware, requireRole('ADMIN'), asyncHandler(createUser));
+usersRouter.use(authMiddleware, requireRole('ADMIN'));
+
+usersRouter.get('/', asyncHandler(getUsers));
+usersRouter.post('/', asyncHandler(createUser));
 
 export default usersRouter;

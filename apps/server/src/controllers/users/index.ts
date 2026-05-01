@@ -1,6 +1,6 @@
 import prisma from '@opsflow/db';
-import { createUserSchema } from '@opsflow/shared';
-import type { AuthUser, CreateUserResponse, UserRole } from '@opsflow/shared';
+import { createUserSchema, getUsersQuerySchema } from '@opsflow/shared';
+import type { AuthUser, CreateUserResponse, GetUsersResponse, UserListItem, UserRole } from '@opsflow/shared';
 import type { Request, Response } from 'express';
 import { hashPassword } from '@/lib/auth/password';
 import { AppError } from '@/utils/apiError';
@@ -55,6 +55,47 @@ export const createUser = async (req: Request, res: Response) => {
   const { status, body } = successResponse<CreateUserResponse>(
     StatusCodes.CREATED,
     'User created successfully',
+    response,
+  );
+  res.status(status).json(body);
+};
+
+export const getUsers = async (req: Request, res: Response) => {
+  const parsedQuery = getUsersQuerySchema.safeParse(req.query);
+  if (!parsedQuery.success) {
+    throw new AppError(StatusCodes.BAD_REQUEST, 'Validation failed', parsedQuery.error.issues);
+  }
+
+  const where = parsedQuery.data.role ? { role: parsedQuery.data.role } : undefined;
+  const users = await prisma.user.findMany({
+    where,
+    select: {
+      id: true,
+      name: true,
+      email: true,
+      role: true,
+      isActive: true,
+      createdAt: true,
+    },
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
+
+  const response: GetUsersResponse = {
+    users: users.map<UserListItem>(user => ({
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      role: user.role as UserRole,
+      isActive: user.isActive,
+      createdAt: user.createdAt.toISOString(),
+    })),
+  };
+
+  const { status, body } = successResponse<GetUsersResponse>(
+    StatusCodes.OK,
+    'Users fetched successfully',
     response,
   );
   res.status(status).json(body);

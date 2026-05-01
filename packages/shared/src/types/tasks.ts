@@ -9,9 +9,11 @@ import {
   createTaskResponseSchema,
   createTaskSchema,
   getTaskByIdResponseSchema,
+  getTaskTimelineResponseSchema,
   getTasksQuerySchema,
   getTaskUpdatesResponseSchema,
   getTasksResponseSchema,
+  taskTimelineEntrySchema,
   taskPrioritySchema,
   taskSchema,
   taskUpdateSchema,
@@ -30,6 +32,7 @@ export type Task = z.infer<typeof taskSchema>;
 export type TaskWithUsers = z.infer<typeof taskWithUsersSchema>;
 export type TaskUpdate = z.infer<typeof taskUpdateSchema>;
 export type TaskUpdateWithUser = z.infer<typeof taskUpdateWithUserSchema>;
+export type TaskTimelineEntry = z.infer<typeof taskTimelineEntrySchema>;
 
 export type CreateTaskInput = z.infer<typeof createTaskSchema>;
 export type GetTasksQueryInput = z.infer<typeof getTasksQuerySchema>;
@@ -46,3 +49,4 @@ export type AssignTaskResponse = z.infer<typeof assignTaskResponseSchema>;
 export type ChangeTaskStatusResponse = z.infer<typeof changeTaskStatusResponseSchema>;
 export type CreateTaskUpdateResponse = z.infer<typeof createTaskUpdateResponseSchema>;
 export type GetTaskUpdatesResponse = z.infer<typeof getTaskUpdatesResponseSchema>;
+export type GetTaskTimelineResponse = z.infer<typeof getTaskTimelineResponseSchema>;

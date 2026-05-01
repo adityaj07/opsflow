@@ -13,9 +13,11 @@ import type {
   CreateTaskUpdateResponse,
   CreateTaskResponse,
   GetTaskByIdResponse,
+  GetTaskTimelineResponse,
   GetTaskUpdatesResponse,
   GetTasksResponse,
   TaskStatus,
+  TaskTimelineEntry,
   TaskUpdateWithUser,
   UpdateTaskResponse,
   UserRole,
@@ -82,6 +84,33 @@ const serializeTaskUpdate = (taskUpdate: {
     name: taskUpdate.user.name,
     email: taskUpdate.user.email,
     role: taskUpdate.user.role as UserRole,
+  },
+});
+
+const serializeTimelineLog = (log: {
+  id: string;
+  actionType: 'TASK_CREATED' | 'TASK_ASSIGNED' | 'STATUS_CHANGED' | 'TASK_UPDATED';
+  metadata: unknown;
+  createdAt: Date;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+  };
+}): TaskTimelineEntry => ({
+  type: 'log',
+  createdAt: log.createdAt.toISOString(),
+  log: {
+    id: log.id,
+    actionType: log.actionType,
+    metadata: log.metadata,
+    user: {
+      id: log.user.id,
+      name: log.user.name,
+      email: log.user.email,
+      role: log.user.role as UserRole,
+    },
   },
 });
 
@@ -572,6 +601,78 @@ export const getTaskUpdates = async (req: Request, res: Response) => {
   const { status, body } = successResponse<GetTaskUpdatesResponse>(
     StatusCodes.OK,
     'Task updates fetched successfully',
+    response,
+  );
+  res.status(status).json(body);
+};
+
+export const getTaskTimeline = async (req: Request, res: Response) => {
+  const actor = checkAuthenticated(req);
+  const actorRole = getActorRole(actor.role);
+  const taskId = getRouteParam(req.params.taskId, 'taskId');
+
+  const task = await prisma.task.findUnique({
+    where: { id: taskId },
+    select: {
+      id: true,
+      createdById: true,
+      assignedToId: true,
+    },
+  });
+
+  if (!task) {
+    throw new AppError(StatusCodes.NOT_FOUND, 'Task not found');
+  }
+
+  if (!canAccessTask(actorRole, actor.userId, task)) {
+    throw new AppError(StatusCodes.FORBIDDEN, 'You do not have access to this resource');
+  }
+
+  const [logs, updates] = await prisma.$transaction([
+    prisma.activityLog.findMany({
+      where: { taskId },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+          },
+        },
+      },
+    }),
+    prisma.taskUpdate.findMany({
+      where: { taskId },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+          },
+        },
+      },
+    }),
+  ]);
+
+  const timelineItems: TaskTimelineEntry[] = [
+    ...logs.map(log => serializeTimelineLog(log)),
+    ...updates.map(update => ({
+      type: 'update' as const,
+      createdAt: update.createdAt.toISOString(),
+      update: serializeTaskUpdate(update),
+    })),
+  ].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+
+  const response: GetTaskTimelineResponse = {
+    items: timelineItems,
+  };
+
+  const { status, body } = successResponse<GetTaskTimelineResponse>(
+    StatusCodes.OK,
+    'Task timeline fetched successfully',
     response,
   );
   res.status(status).json(body);
