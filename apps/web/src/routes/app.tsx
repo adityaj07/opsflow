@@ -26,7 +26,15 @@ function AppLayout() {
     return null;
   }
 
-  const activePage = location.pathname.split("/").at(-1) ?? "Dashboard";
+  const getBreadcrumbLabel = () => {
+    if (location.pathname === "/app/dashboard") return "Dashboard";
+    if (location.pathname === "/app/tasks") return "Tasks";
+    if (location.pathname.startsWith("/app/tasks/")) return "Task Detail";
+    if (location.pathname === "/app/users") return "Users";
+    return "OpsFlow";
+  };
+
+  const activePage = getBreadcrumbLabel();
 
   return (
     <SidebarProvider>
@@ -38,7 +46,7 @@ function AppLayout() {
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbPage className="capitalize">{activePage}</BreadcrumbPage>
+                <BreadcrumbPage>{activePage}</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>

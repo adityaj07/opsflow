@@ -1,4 +1,4 @@
-import type { GetUsersQueryInput } from "@opsflow/shared";
+import type { GetTasksQueryInput, GetUsersQueryInput } from "@opsflow/shared";
 
 export const queryKeys = {
   auth: {
@@ -7,5 +7,11 @@ export const queryKeys = {
   users: {
     all: ["users"] as const,
     list: (query?: GetUsersQueryInput) => ["users", "list", query ?? {}] as const,
+  },
+  tasks: {
+    all: ["tasks"] as const,
+    list: (query: GetTasksQueryInput) => ["tasks", "list", query] as const,
+    detail: (taskId: string) => ["tasks", "detail", taskId] as const,
+    timeline: (taskId: string) => ["tasks", "timeline", taskId] as const,
   },
 } as const;

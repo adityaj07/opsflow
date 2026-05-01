@@ -4,10 +4,11 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { queryKeys } from "@/constants/queryKeys";
 import { usersApi } from "@/features/users/api/users.api";
 
-export const useUsersQuery = (query?: GetUsersQueryInput) => {
+export const useUsersQuery = (query?: GetUsersQueryInput, enabled = true) => {
   return useQuery({
     queryKey: queryKeys.users.list(query),
     queryFn: () => usersApi.getUsers(query),
+    enabled,
   });
 };
 

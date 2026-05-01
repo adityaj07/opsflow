@@ -6,9 +6,9 @@ import { asyncHandler } from '@/utils/asyncHandler';
 
 const usersRouter = Router();
 
-usersRouter.use(authMiddleware, requireRole('ADMIN'));
+usersRouter.use(authMiddleware);
 
-usersRouter.get('/', asyncHandler(getUsers));
-usersRouter.post('/', asyncHandler(createUser));
+usersRouter.get('/', requireRole('ADMIN', 'MANAGER'), asyncHandler(getUsers));
+usersRouter.post('/', requireRole('ADMIN'), asyncHandler(createUser));
 
 export default usersRouter;
