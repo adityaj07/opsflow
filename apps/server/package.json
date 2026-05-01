@@ -12,14 +12,16 @@
   "dependencies": {
     "@opsflow/db": "workspace:*",
     "@opsflow/env": "workspace:*",
+    "@opsflow/shared": "workspace:*",
+    "bcrypt": "^6.0.0",
     "cors": "^2.8.5",
     "dotenv": "catalog:",
     "express": "^5.1.0",
-    "zod": "catalog:",
-    "@opsflow/shared": "workspace:*"
+    "zod": "catalog:"
   },
   "devDependencies": {
     "@opsflow/config": "workspace:*",
+    "@types/bcrypt": "^6.0.0",
     "@types/bun": "catalog:",
     "@types/cors": "^2.8.17",
     "@types/express": "^5.0.1",
