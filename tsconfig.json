@@ -1,0 +1,3 @@
+{
+  "extends": "@opsflow/config/tsconfig.base.json"
+}
