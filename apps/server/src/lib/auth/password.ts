@@ -1,13 +1,9 @@
-import bcrypt from 'bcrypt';
-
-const SALT_ROUNDS = 10;
-
 // Hash a plain text password
 export const hashPassword = async (password: string): Promise<string> => {
-  return bcrypt.hash(password, SALT_ROUNDS);
+  return Bun.password.hash(password);
 };
 
 // Compare plain text password with stored hash
 export const comparePassword = async (password: string, hash: string): Promise<boolean> => {
-  return bcrypt.compare(password, hash);
+  return Bun.password.verify(password, hash);
 };

@@ -1,5 +1,4 @@
 import 'dotenv/config';
-import bcrypt from 'bcrypt';
 import prisma from './index';
 
 async function main() {
@@ -26,7 +25,7 @@ async function main() {
       return;
     }
 
-    const hashed = await bcrypt.hash(password, 12);
+    const hashed = await Bun.password.hash(password);
 
     if (existing) {
       await prisma.user.update({
