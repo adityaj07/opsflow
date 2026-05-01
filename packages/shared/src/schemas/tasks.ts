@@ -1,0 +1,89 @@
+import { z } from 'zod';
+import { userRoleSchema } from './auth';
+
+export const taskStatusSchema = z.enum([
+  'BACKLOG',
+  'TODO',
+  'IN_PROGRESS',
+  'DONE',
+  'CANCELED',
+  'DUPLICATE',
+]);
+
+export const taskPrioritySchema = z.enum(['HIGH', 'MEDIUM', 'LOW']);
+
+export const taskUserSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().min(1),
+  email: z.email(),
+  role: userRoleSchema,
+});
+
+export const taskSchema = z.object({
+  id: z.string().min(1),
+  title: z.string().min(1),
+  description: z.string().nullable(),
+  status: taskStatusSchema,
+  priority: taskPrioritySchema,
+  createdById: z.string().min(1),
+  assignedToId: z.string().min(1),
+  dueDate: z.string().datetime().nullable(),
+  lastActivityAt: z.string().datetime(),
+  createdAt: z.string().datetime(),
+  updatedAt: z.string().datetime(),
+});
+
+export const taskWithUsersSchema = taskSchema.extend({
+  createdBy: taskUserSchema,
+  assignedTo: taskUserSchema,
+});
+
+export const createTaskSchema = z.object({
+  title: z.string().trim().min(1, 'Title is required').max(200, 'Title is too long'),
+  description: z.string().trim().max(5000, 'Description is too long').optional(),
+  assignedToId: z.string().min(1, 'assignedToId is required'),
+  priority: taskPrioritySchema.optional(),
+  dueDate: z.string().datetime('dueDate must be a valid ISO datetime').optional(),
+});
+
+export const getTasksQuerySchema = z.object({
+  status: taskStatusSchema.optional(),
+  priority: taskPrioritySchema.optional(),
+  assignedToId: z.string().min(1).optional(),
+  page: z.coerce.number().int().min(1).default(1),
+  limit: z.coerce.number().int().min(1).max(100).default(10),
+});
+
+export const updateTaskSchema = z
+  .object({
+    title: z.string().trim().min(1, 'Title cannot be empty').max(200, 'Title is too long').optional(),
+    description: z.string().trim().max(5000, 'Description is too long').optional(),
+    priority: taskPrioritySchema.optional(),
+    dueDate: z.string().datetime('dueDate must be a valid ISO datetime').nullable().optional(),
+  })
+  .refine(data => Object.keys(data).length > 0, {
+    message: 'At least one field is required to update',
+  });
+
+export const assignTaskSchema = z.object({
+  assignedToId: z.string().min(1, 'assignedToId is required'),
+});
+
+export const changeTaskStatusSchema = z.object({
+  status: taskStatusSchema,
+});
+
+export const createTaskResponseSchema = taskSchema;
+export const getTaskByIdResponseSchema = taskWithUsersSchema;
+export const updateTaskResponseSchema = taskSchema;
+export const assignTaskResponseSchema = taskSchema;
+export const changeTaskStatusResponseSchema = taskSchema;
+
+export const getTasksResponseSchema = z.object({
+  data: z.array(taskSchema),
+  pagination: z.object({
+    page: z.number().int().min(1),
+    limit: z.number().int().min(1),
+    total: z.number().int().min(0),
+  }),
+});

@@ -1,5 +1,5 @@
 import type { NextFunction, Request, Response } from 'express';
-import { authenticateRequest } from '@/lib/auth';
+import { authenticateRequest } from '@/lib/auth/auth';
 
 export const authMiddleware = (req: Request, _res: Response, next: NextFunction) => {
   try {

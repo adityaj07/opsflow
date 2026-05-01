@@ -18,12 +18,14 @@
     "db:start": "docker compose up -d",
     "db:watch": "docker compose up",
     "db:stop": "docker compose stop",
-    "db:down": "docker compose down"
+    "db:down": "docker compose down",
+    "seed:admin": "bun ./src/seedAdmin.ts"
   },
   "dependencies": {
     "@opsflow/env": "workspace:*",
     "@prisma/adapter-pg": "^7.7.0",
     "@prisma/client": "catalog:",
+    "bcrypt": "^5.1.0",
     "dotenv": "catalog:",
     "pg": "^8.17.1",
     "zod": "catalog:"

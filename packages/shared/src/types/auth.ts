@@ -8,6 +8,7 @@ import {
   signInSchema,
   signupResponseSchema,
   signUpSchema,
+  userRoleSchema,
 } from '../schemas/auth';
 
 export type SignInInput = z.infer<typeof signInSchema>;
@@ -19,3 +20,5 @@ export type SignupResponse = z.infer<typeof signupResponseSchema>;
 export type LoginResponse = z.infer<typeof loginResponseSchema>;
 export type MeResponse = z.infer<typeof meResponseSchema>;
 export type LogoutResponse = z.infer<typeof logoutResponseSchema>;
+
+export type UserRole = z.infer<typeof userRoleSchema>;

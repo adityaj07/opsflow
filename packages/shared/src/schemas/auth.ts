@@ -1,5 +1,7 @@
 import { z } from 'zod';
 
+export const userRoleSchema = z.enum(['USER', 'ADMIN', 'MANAGER']);
+
 // request schemas
 export const signInSchema = z.object({
   email: z.email('Invalid email address').trim().toLowerCase(),
@@ -14,7 +16,7 @@ export const authUserSchema = z.object({
   id: z.string().min(1),
   name: z.string().min(1),
   email: z.email(),
-  role: z.string().min(1),
+  role: userRoleSchema,
 });
 
 export const authSessionSchema = z.object({

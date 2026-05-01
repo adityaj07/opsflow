@@ -7,17 +7,23 @@ import type {
   LogoutResponse,
   MeResponse,
   SignupResponse,
+  UserRole,
 } from '@opsflow/shared';
 import type { Request, Response } from 'express';
-import { hashPassword, comparePassword } from '@/lib/password';
-import { signToken } from '@/lib/jwt';
+import { hashPassword, comparePassword } from '@/lib/auth/password';
+import { signToken } from '@/lib/auth/jwt';
 import { AppError } from '@/utils/apiError';
 import { successResponse } from '@/utils/apiResponse';
 import { StatusCodes } from '@/utils/statusCodes';
-import { setAuthCookie } from '@/lib/cookie';
+import { setAuthCookie } from '@/lib/auth/cookie';
 import { AUTH_COOKIE_NAME } from '@/constants/auth';
 
-const toAuthUser = (user: { id: string; name: string; email: string; role: string }): AuthUser => {
+const toAuthUser = (user: {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+}): AuthUser => {
   return {
     id: user.id,
     name: user.name,
@@ -27,8 +33,12 @@ const toAuthUser = (user: { id: string; name: string; email: string; role: strin
 };
 
 export const signup = async (req: Request, res: Response) => {
-  // do validation
-  const payload = signUpSchema.parse(req.body);
+  const parsedPayload = signUpSchema.safeParse(req.body);
+
+  if (!parsedPayload.success) {
+    throw new AppError(StatusCodes.BAD_REQUEST, 'Validation failed', parsedPayload.error.issues);
+  }
+  const payload = parsedPayload.data;
   const email = payload.email;
 
   // search existing user
@@ -81,8 +91,12 @@ export const signup = async (req: Request, res: Response) => {
 };
 
 export const login = async (req: Request, res: Response) => {
-  // validation
-  const payload = signInSchema.parse(req.body);
+  const parsedPayload = signInSchema.safeParse(req.body);
+
+  if (!parsedPayload.success) {
+    throw new AppError(StatusCodes.BAD_REQUEST, 'Validation failed', parsedPayload.error.issues);
+  }
+  const payload = parsedPayload.data;
   const email = payload.email;
 
   const user = await prisma.user.findUnique({
