@@ -15,7 +15,8 @@
     "cors": "^2.8.5",
     "dotenv": "catalog:",
     "express": "^5.1.0",
-    "zod": "catalog:"
+    "zod": "catalog:",
+    "@opsflow/shared": "workspace:*"
   },
   "devDependencies": {
     "@opsflow/config": "workspace:*",

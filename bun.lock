@@ -20,6 +20,7 @@
       "dependencies": {
         "@opsflow/db": "workspace:*",
         "@opsflow/env": "workspace:*",
+        "@opsflow/shared": "workspace:*",
         "cors": "^2.8.5",
         "dotenv": "catalog:",
         "express": "^5.1.0",
@@ -38,6 +39,7 @@
       "name": "web",
       "dependencies": {
         "@opsflow/env": "workspace:*",
+        "@opsflow/shared": "workspace:*",
         "@opsflow/ui": "workspace:*",
         "@prisma/client": "catalog:",
         "@react-router/fs-routes": "^7.14.1",
@@ -99,6 +101,17 @@
       "devDependencies": {
         "@opsflow/config": "workspace:*",
         "@types/bun": "catalog:",
+        "typescript": "catalog:",
+      },
+    },
+    "packages/shared": {
+      "name": "@opsflow/shared",
+      "version": "0.0.0",
+      "dependencies": {
+        "zod": "catalog:",
+      },
+      "devDependencies": {
+        "@opsflow/config": "workspace:*",
         "typescript": "catalog:",
       },
     },
@@ -364,6 +377,8 @@
     "@opsflow/db": ["@opsflow/db@workspace:packages/db"],
 
     "@opsflow/env": ["@opsflow/env@workspace:packages/env"],
+
+    "@opsflow/shared": ["@opsflow/shared@workspace:packages/shared"],
 
     "@opsflow/ui": ["@opsflow/ui@workspace:packages/ui"],
 
