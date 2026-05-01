@@ -73,11 +73,41 @@ export const changeTaskStatusSchema = z.object({
   status: taskStatusSchema,
 });
 
+export const createTaskUpdateSchema = z.object({
+  whatWasDone: z
+    .string()
+    .trim()
+    .min(1, 'whatWasDone is required')
+    .max(5000, 'whatWasDone is too long'),
+  blockers: z.string().trim().max(5000, 'blockers is too long').optional(),
+  nextSteps: z.string().trim().max(5000, 'nextSteps is too long').optional(),
+  status: taskStatusSchema.optional(),
+});
+
+export const taskUpdateSchema = z.object({
+  id: z.string().min(1),
+  taskId: z.string().min(1),
+  userId: z.string().min(1),
+  status: taskStatusSchema.nullable(),
+  whatWasDone: z.string().min(1),
+  blockers: z.string().nullable(),
+  nextSteps: z.string().nullable(),
+  createdAt: z.string().datetime(),
+});
+
+export const taskUpdateWithUserSchema = taskUpdateSchema.extend({
+  user: taskUserSchema,
+});
+
 export const createTaskResponseSchema = taskSchema;
 export const getTaskByIdResponseSchema = taskWithUsersSchema;
 export const updateTaskResponseSchema = taskSchema;
 export const assignTaskResponseSchema = taskSchema;
 export const changeTaskStatusResponseSchema = taskSchema;
+export const createTaskUpdateResponseSchema = taskUpdateWithUserSchema;
+export const getTaskUpdatesResponseSchema = z.object({
+  updates: z.array(taskUpdateWithUserSchema),
+});
 
 export const getTasksResponseSchema = z.object({
   data: z.array(taskSchema),

@@ -2,6 +2,7 @@ import prisma from '@opsflow/db';
 import {
   assignTaskSchema,
   changeTaskStatusSchema,
+  createTaskUpdateSchema,
   createTaskSchema,
   getTasksQuerySchema,
   updateTaskSchema,
@@ -9,10 +10,13 @@ import {
 import type {
   AssignTaskResponse,
   ChangeTaskStatusResponse,
+  CreateTaskUpdateResponse,
   CreateTaskResponse,
   GetTaskByIdResponse,
+  GetTaskUpdatesResponse,
   GetTasksResponse,
   TaskStatus,
+  TaskUpdateWithUser,
   UpdateTaskResponse,
   UserRole,
 } from '@opsflow/shared';
@@ -47,6 +51,38 @@ const serializeTask = (task: {
   lastActivityAt: task.lastActivityAt.toISOString(),
   createdAt: task.createdAt.toISOString(),
   updatedAt: task.updatedAt.toISOString(),
+});
+
+const serializeTaskUpdate = (taskUpdate: {
+  id: string;
+  taskId: string;
+  userId: string;
+  status: TaskStatus | null;
+  whatWasDone: string;
+  blockers: string | null;
+  nextSteps: string | null;
+  createdAt: Date;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    role: string;
+  };
+}): TaskUpdateWithUser => ({
+  id: taskUpdate.id,
+  taskId: taskUpdate.taskId,
+  userId: taskUpdate.userId,
+  status: taskUpdate.status,
+  whatWasDone: taskUpdate.whatWasDone,
+  blockers: taskUpdate.blockers,
+  nextSteps: taskUpdate.nextSteps,
+  createdAt: taskUpdate.createdAt.toISOString(),
+  user: {
+    id: taskUpdate.user.id,
+    name: taskUpdate.user.name,
+    email: taskUpdate.user.email,
+    role: taskUpdate.user.role as UserRole,
+  },
 });
 
 export const createTask = async (req: Request, res: Response) => {
@@ -404,6 +440,138 @@ export const changeTaskStatus = async (req: Request, res: Response) => {
   const { status, body } = successResponse<ChangeTaskStatusResponse>(
     StatusCodes.OK,
     'Task status updated successfully',
+    response,
+  );
+  res.status(status).json(body);
+};
+
+export const createTaskUpdate = async (req: Request, res: Response) => {
+  const actor = checkAuthenticated(req);
+  const actorRole = getActorRole(actor.role);
+  const taskId = getRouteParam(req.params.taskId, 'taskId');
+
+  const parsedPayload = createTaskUpdateSchema.safeParse(req.body);
+  if (!parsedPayload.success) {
+    throw new AppError(StatusCodes.BAD_REQUEST, 'Validation failed', parsedPayload.error.issues);
+  }
+
+  const payload = parsedPayload.data;
+  const task = await prisma.task.findUnique({
+    where: { id: taskId },
+    select: {
+      id: true,
+      status: true,
+      createdById: true,
+      assignedToId: true,
+    },
+  });
+
+  if (!task) {
+    throw new AppError(StatusCodes.NOT_FOUND, 'Task not found');
+  }
+
+  if (!canAccessTask(actorRole, actor.userId, task)) {
+    throw new AppError(StatusCodes.FORBIDDEN, 'You do not have access to this resource');
+  }
+
+  // using transaction to create the update, activity log aand update the update the metadata on task
+  const createdUpdate = await prisma.$transaction(async tx => {
+    const nextUpdate = await tx.taskUpdate.create({
+      data: {
+        taskId,
+        userId: actor.userId,
+        status: payload.status,
+        whatWasDone: payload.whatWasDone,
+        blockers: payload.blockers,
+        nextSteps: payload.nextSteps,
+      },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            role: true,
+          },
+        },
+      },
+    });
+
+    await tx.task.update({
+      where: { id: taskId },
+      data: {
+        ...(payload.status ? { status: payload.status } : {}),
+        lastActivityAt: new Date(),
+      },
+    });
+
+    await tx.activityLog.create({
+      data: {
+        userId: actor.userId,
+        taskId,
+        actionType: payload.status ? 'STATUS_CHANGED' : 'TASK_UPDATED',
+        metadata: payload.status
+          ? { from: task.status, to: payload.status, source: 'task_update' }
+          : { source: 'task_update' },
+      },
+    });
+
+    return nextUpdate;
+  });
+
+  const response: CreateTaskUpdateResponse = serializeTaskUpdate(createdUpdate);
+  const { status, body } = successResponse<CreateTaskUpdateResponse>(
+    StatusCodes.CREATED,
+    'Task update submitted successfully',
+    response,
+  );
+  res.status(status).json(body);
+};
+
+export const getTaskUpdates = async (req: Request, res: Response) => {
+  const actor = checkAuthenticated(req);
+  const actorRole = getActorRole(actor.role);
+  const taskId = getRouteParam(req.params.taskId, 'taskId');
+
+  const task = await prisma.task.findUnique({
+    where: { id: taskId },
+    select: {
+      id: true,
+      createdById: true,
+      assignedToId: true,
+    },
+  });
+
+  if (!task) {
+    throw new AppError(StatusCodes.NOT_FOUND, 'Task not found');
+  }
+
+  if (!canAccessTask(actorRole, actor.userId, task)) {
+    throw new AppError(StatusCodes.FORBIDDEN, 'You do not have access to this resource');
+  }
+
+  const updates = await prisma.taskUpdate.findMany({
+    where: { taskId },
+    include: {
+      user: {
+        select: {
+          id: true,
+          name: true,
+          email: true,
+          role: true,
+        },
+      },
+    },
+    orderBy: { createdAt: 'asc' },
+  });
+
+  const response: GetTaskUpdatesResponse = {
+    updates: updates.map(update => serializeTaskUpdate(update)),
+  };
+
+  const { status, body } = successResponse<GetTaskUpdatesResponse>(
+    StatusCodes.OK,
+    'Task updates fetched successfully',
     response,
   );
   res.status(status).json(body);

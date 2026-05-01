@@ -3,7 +3,9 @@ import {
   assignTask,
   changeTaskStatus,
   createTask,
+  createTaskUpdate,
   getTaskById,
+  getTaskUpdates,
   getTasks,
   updateTask,
 } from '@/controllers/tasks';
@@ -21,5 +23,7 @@ tasksRouter.get('/:taskId', asyncHandler(getTaskById));
 tasksRouter.patch('/:taskId', requireRole('MANAGER', 'ADMIN'), asyncHandler(updateTask));
 tasksRouter.patch('/:taskId/assign', requireRole('MANAGER', 'ADMIN'), asyncHandler(assignTask));
 tasksRouter.patch('/:taskId/status', asyncHandler(changeTaskStatus));
+tasksRouter.post('/:taskId/updates', asyncHandler(createTaskUpdate));
+tasksRouter.get('/:taskId/updates', asyncHandler(getTaskUpdates));
 
 export default tasksRouter;
