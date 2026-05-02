@@ -107,7 +107,108 @@ bun run dev
 
 Other useful scripts: `bun run db:studio`, `bun run build`, `bun run check-types`.
 
+## Engineering Decision Document
+
+### 1. System Architecture
+
+OpsFlow follows a simple full-stack architecture:
+
+- React frontend for UI
+- Express-based API for business logic
+- PostgreSQL with Prisma for data persistence
+
+The system is structured as a monorepo using Turborepo to keep frontend, backend, and shared packages in sync.
+
+Communication flow:
+Client → API → Database
+
+The architecture is intentionally simple to prioritize clarity and speed of development.
+
+---
+
+### 2. Database Design
+
+A relational database (PostgreSQL) was chosen to model structured relationships:
+
+- Users
+- Tasks
+- TaskUpdates
+- ActivityLogs
+
+Key relationships:
+
+- A task belongs to a creator and an assignee
+- A task has many updates
+- A task has many activity logs
+
+This structure ensures consistency and makes querying timelines and task state straightforward.
+
+---
+
+### 3. Key Decisions
+
+**Structured Updates over Comments**
+Instead of a generic comment system, structured updates were introduced to enforce clarity in communication. Each update captures progress, blockers, and next steps.
+
+**Unified Timeline**
+Activity logs and updates are combined into a single timeline to provide a complete view of task history.
+
+**Role-Based Access Control**
+Three roles were implemented:
+
+- Admin: system-level control
+- Manager: task coordination
+- User: execution
+
+This keeps responsibilities clear and realistic.
+
+**SQL over NoSQL**
+A relational database was chosen due to clear relationships between entities and the need for consistent querying.
+
+---
+
+### 4. Trade-offs
+
+- Did not implement real-time updates to keep scope focused
+- No comments or chat system to avoid unstructured communication
+- Limited filtering and search to keep the system simple
+- No project/workspace layer to avoid overengineering
+
+The goal was to build a focused system rather than a feature-heavy one.
+
+---
+
+### 5. Scaling Strategy
+
+If the system grows to 10,000+ users:
+
+Potential bottlenecks:
+
+- Timeline queries (large activity logs)
+- Task listing with filters
+
+Improvements:
+
+- Add pagination and indexing to all the apis
+- Introduce caching for dashboard data
+- Split activity logs into a separate service if needed
+- Use background jobs for heavy operations
+
+---
+
+### 6. Future Improvements
+
+With more time, the following would be added:
+
+- Real-time updates (WebSockets)
+- Task time tracking and estimation
+- Advanced filtering and search
+- Notifications system
+- Better analytics and reporting
+
+The current system focuses on core execution workflows and leaves room for these enhancements.
+
 ## Links
 
-- **Deployed app:** add your production URL here.
-- **Postman collection:** add your public or workspace collection link here.
+- **Deployed app:** [OpsFlow](https://opsflow-web.vercel.app/)
+- **Postman collection:** [Postman Api Collection](https://aditya-8343.postman.co/workspace/Aditya-Joshi~656fbee4-cf23-4ac7-b1dc-64ae2f568928/collection/24138226-004bfa50-39be-4231-89ed-52f61c37265e?action=share&source=copy-link&creator=24138226)

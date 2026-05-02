@@ -6,7 +6,7 @@ export const setAuthCookie = (res: Response, token: string) => {
   res.cookie(AUTH_COOKIE_NAME, token, {
     httpOnly: true,
     secure: true,
-    sameSite: 'lax',
+    sameSite: 'none',
     maxAge: ACCESS_TOKEN_MAX_AGE_MS,
     path: '/',
   });

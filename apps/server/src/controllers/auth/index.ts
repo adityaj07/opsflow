@@ -181,7 +181,7 @@ export const logout = async (_req: Request, res: Response) => {
   res.clearCookie(AUTH_COOKIE_NAME, {
     httpOnly: true,
     secure: true,
-    sameSite: 'lax',
+    sameSite: 'none',
     path: '/',
   });
 
