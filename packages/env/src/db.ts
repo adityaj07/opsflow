@@ -16,6 +16,8 @@ for (const path of envPaths) {
 }
 
 export const env = createEnv({
+  clientPrefix: "",
+  client: {},
   server: {
     DATABASE_URL: z.string().min(1),
   },
