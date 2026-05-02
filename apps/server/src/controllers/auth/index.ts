@@ -10,13 +10,13 @@ import type {
   UserRole,
 } from '@opsflow/shared';
 import type { Request, Response } from 'express';
-import { hashPassword, comparePassword } from '@/lib/auth/password';
-import { signToken } from '@/lib/auth/jwt';
-import { AppError } from '@/utils/apiError';
-import { successResponse } from '@/utils/apiResponse';
-import { StatusCodes } from '@/utils/statusCodes';
-import { setAuthCookie } from '@/lib/auth/cookie';
-import { AUTH_COOKIE_NAME } from '@/constants/auth';
+import { hashPassword, comparePassword } from '../../lib/auth/password.js';
+import { signToken } from '../../lib/auth/jwt.js';
+import { AppError } from '../../utils/apiError.js';
+import { successResponse } from '../../utils/apiResponse.js';
+import { StatusCodes } from '../../utils/statusCodes.js';
+import { setAuthCookie } from '../../lib/auth/cookie.js';
+import { AUTH_COOKIE_NAME } from '../../constants/auth.js';
 
 const toAuthUser = (user: {
   id: string;

@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { createUser, getUsers } from '@/controllers/users';
-import { authMiddleware } from '@/middlewares/auth';
-import { requireRole } from '@/middlewares/rbac';
-import { asyncHandler } from '@/utils/asyncHandler';
+import { createUser, getUsers } from '../../../controllers/users/index.js';
+import { authMiddleware } from '../../../middlewares/auth.js';
+import { requireRole } from '../../../middlewares/rbac.js';
+import { asyncHandler } from '../../../utils/asyncHandler.js';
 
 const usersRouter = Router();
 

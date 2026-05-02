@@ -23,11 +23,11 @@ import type {
   UserRole,
 } from '@opsflow/shared';
 import type { Request, Response } from 'express';
-import { AppError } from '@/utils/apiError';
-import { successResponse } from '@/utils/apiResponse';
-import { StatusCodes } from '@/utils/statusCodes';
-import { canAccessTask, getRouteParam } from '@/lib/tasks';
-import { checkAuthenticated, getActorRole, toIsoOrNull } from '@/lib/app';
+import { AppError } from '../../utils/apiError.js';
+import { successResponse } from '../../utils/apiResponse.js';
+import { StatusCodes } from '../../utils/statusCodes.js';
+import { canAccessTask, getRouteParam } from '../../lib/tasks/index.js';
+import { checkAuthenticated, getActorRole, toIsoOrNull } from '../../lib/app/index.js';
 
 const serializeTask = (task: {
   id: string;

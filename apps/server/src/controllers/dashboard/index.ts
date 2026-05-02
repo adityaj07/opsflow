@@ -5,9 +5,9 @@ import type {
   UserRole,
 } from '@opsflow/shared';
 import type { Request, Response } from 'express';
-import { checkAuthenticated, getActorRole } from '@/lib/app';
-import { successResponse } from '@/utils/apiResponse';
-import { StatusCodes } from '@/utils/statusCodes';
+import { checkAuthenticated, getActorRole } from '../../lib/app/index.js';
+import { successResponse } from '../../utils/apiResponse.js';
+import { StatusCodes } from '../../utils/statusCodes.js';
 
 const getTaskWhereByRole = (role: 'ADMIN' | 'MANAGER' | 'USER', userId: string) => {
   if (role === 'USER') {

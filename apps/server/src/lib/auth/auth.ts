@@ -1,8 +1,8 @@
-import { AppError } from '@/utils/apiError';
-import { StatusCodes } from '@/utils/statusCodes';
+import { AppError } from '../../utils/apiError.js';
+import { StatusCodes } from '../../utils/statusCodes.js';
 import type { Request } from 'express';
 import { type AuthPayload, verifyToken } from './jwt.js';
-import { AUTH_COOKIE_NAME } from '@/constants/auth';
+import { AUTH_COOKIE_NAME } from '../../constants/auth.js';
 
 type RequestWithCookies = Request & {
   cookies?: Record<string, string | undefined>;

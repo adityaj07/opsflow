@@ -1,6 +1,6 @@
 import type { Request, Response, NextFunction } from 'express';
 import crypto from 'crypto';
-import { logger } from '@/lib/app/logger';
+import { logger } from '../lib/app/logger.js';
 
 const isProd = process.env.NODE_ENV === 'production';
 

@@ -9,10 +9,10 @@ import {
   getTaskUpdates,
   getTasks,
   updateTask,
-} from '@/controllers/tasks';
-import { authMiddleware } from '@/middlewares/auth';
-import { requireRole } from '@/middlewares/rbac';
-import { asyncHandler } from '@/utils/asyncHandler';
+} from '../../../controllers/tasks/index.js';
+import { authMiddleware } from '../../../middlewares/auth.js';
+import { requireRole } from '../../../middlewares/rbac.js';
+import { asyncHandler } from '../../../utils/asyncHandler.js';
 
 const tasksRouter = Router();
 

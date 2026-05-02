@@ -1,8 +1,8 @@
 import { type Request, type Response, type NextFunction } from 'express';
 
-import { StatusCodes } from '@/utils/statusCodes';
+import { StatusCodes } from '../../utils/statusCodes.js';
 
-import { AppError } from '@/utils/apiError';
+import { AppError } from '../../utils/apiError.js';
 import { ZodError } from 'zod';
 import { logger } from './logger.js';
 

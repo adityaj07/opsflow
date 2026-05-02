@@ -2,10 +2,10 @@ import prisma from '@opsflow/db';
 import { createUserSchema, getUsersQuerySchema } from '@opsflow/shared';
 import type { AuthUser, CreateUserResponse, GetUsersResponse, UserListItem, UserRole } from '@opsflow/shared';
 import type { Request, Response } from 'express';
-import { hashPassword } from '@/lib/auth/password';
-import { AppError } from '@/utils/apiError';
-import { successResponse } from '@/utils/apiResponse';
-import { StatusCodes } from '@/utils/statusCodes';
+import { hashPassword } from '../../lib/auth/password.js';
+import { AppError } from '../../utils/apiError.js';
+import { successResponse } from '../../utils/apiResponse.js';
+import { StatusCodes } from '../../utils/statusCodes.js';
 
 const toAuthUser = (user: { id: string; name: string; email: string; role: UserRole }): AuthUser => {
   return {

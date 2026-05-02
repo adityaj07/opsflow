@@ -1,5 +1,5 @@
-import { AppError } from '@/utils/apiError';
-import { StatusCodes } from '@/utils/statusCodes';
+import { AppError } from '../../utils/apiError.js';
+import { StatusCodes } from '../../utils/statusCodes.js';
 import { userRoleSchema, type UserRole } from '@opsflow/shared';
 import type { Request } from 'express';
 

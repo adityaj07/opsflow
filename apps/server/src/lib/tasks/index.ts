@@ -1,5 +1,5 @@
-import { AppError } from '@/utils/apiError';
-import { StatusCodes } from '@/utils/statusCodes';
+import { AppError } from '../../utils/apiError.js';
+import { StatusCodes } from '../../utils/statusCodes.js';
 import type { UserRole } from '@opsflow/shared';
 
 export const getRouteParam = (value: string | string[] | undefined, field: string): string => {
