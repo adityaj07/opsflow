@@ -1,5 +1,4 @@
 import prisma from '@opsflow/db';
-import { env } from '@opsflow/env/server';
 import { signInSchema, signUpSchema } from '@opsflow/shared';
 import type {
   AuthUser,
