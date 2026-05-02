@@ -1,15 +1,7 @@
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from '@tanstack/react-query';
 
-import { queryKeys } from "@/constants/queryKeys";
-import { dashboardApi } from "@/features/dashboard/api/dashboard.api";
-
-export const useDashboardSummaryQuery = (enabled = true) => {
-  return useQuery({
-    queryKey: queryKeys.dashboard.summary,
-    queryFn: dashboardApi.getSummary,
-    enabled,
-  });
-};
+import { queryKeys } from '@/constants/queryKeys';
+import { dashboardApi } from '@/features/dashboard/api/dashboard.api';
 
 export const useDashboardOverviewQuery = (enabled = true) => {
   return useQuery({
