@@ -11,14 +11,16 @@
     "prefix": ""
   },
   "iconLibrary": "lucide",
+  "menuColor": "default",
+  "menuAccent": "subtle",
   "aliases": {
     "components": "@opsflow/ui/components",
     "utils": "@opsflow/ui/lib/utils",
-    "hooks": "@opsflow/ui/hooks",
+    "ui": "@opsflow/ui/components",
     "lib": "@opsflow/ui/lib",
-    "ui": "@opsflow/ui/components"
+    "hooks": "@opsflow/ui/hooks"
   },
-  "menuColor": "default",
-  "menuAccent": "subtle",
-  "registries": {}
+  "registries": {
+    "@forgeui": "https://forgeui.in/r/{name}.json"
+  }
 }
