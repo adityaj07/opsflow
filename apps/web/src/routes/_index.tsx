@@ -38,7 +38,7 @@ export default function Home() {
           animate={{ opacity: 1, y: 0 }}
         />
         <motion.img
-          src="/opsflow-logo-dark.png"
+          src="/opsflow-logo1.png"
           alt="OpsFlow"
           className="mb-4 hidden h-16 w-16 rounded-xl object-cover shadow-md dark:block"
           initial={{ opacity: 0, y: 12 }}
