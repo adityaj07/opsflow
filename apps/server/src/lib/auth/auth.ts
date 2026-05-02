@@ -1,7 +1,7 @@
 import { AppError } from '@/utils/apiError';
 import { StatusCodes } from '@/utils/statusCodes';
 import type { Request } from 'express';
-import { type AuthPayload, verifyToken } from './jwt';
+import { type AuthPayload, verifyToken } from './jwt.js';
 import { AUTH_COOKIE_NAME } from '@/constants/auth';
 
 type RequestWithCookies = Request & {

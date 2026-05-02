@@ -2,9 +2,9 @@ import { env } from '@opsflow/env/server';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import express from 'express';
-import { errorHandler } from './lib/app/errorHandler';
-import apiRouter from './routers';
-import { StatusCodes } from './utils/statusCodes';
+import { errorHandler } from './lib/app/errorHandler.js';
+import apiRouter from './routers/index.js';
+import { StatusCodes } from './utils/statusCodes.js';
 
 const app = express();
 

@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import authRouter from './auth';
-import dashboardRouter from './dashboard';
-import tasksRouter from './tasks';
-import usersRouter from './users';
+import authRouter from './auth/index.js';
+import dashboardRouter from './dashboard/index.js';
+import tasksRouter from './tasks/index.js';
+import usersRouter from './users/index.js';
 
 const v1Router = Router();
 

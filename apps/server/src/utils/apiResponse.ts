@@ -1,4 +1,4 @@
-import type { StatusCode } from './statusCodes';
+import type { StatusCode } from './statusCodes.js';
 
 export type ApiResponse<T> = {
   success: boolean;

@@ -4,7 +4,7 @@ import { StatusCodes } from '@/utils/statusCodes';
 
 import { AppError } from '@/utils/apiError';
 import { ZodError } from 'zod';
-import { logger } from './logger';
+import { logger } from './logger.js';
 
 const formatValidationIssueMessage = (issue: ZodError['issues'][number]) => {
   const field = issue.path.length > 0 ? issue.path.join('.') : 'request';
