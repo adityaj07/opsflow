@@ -1,4 +1,5 @@
 import 'dotenv/config';
+import argon2 from 'argon2';
 import prisma from './index';
 
 async function main() {
@@ -25,7 +26,7 @@ async function main() {
       return;
     }
 
-    const hashed = await Bun.password.hash(password);
+    const hashed = await argon2.hash(password);
 
     if (existing) {
       await prisma.user.update({
