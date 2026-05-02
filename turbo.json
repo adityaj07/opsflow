@@ -5,6 +5,7 @@
     "build": {
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
+      "env": ["DATABASE_URL", "CORS_ORIGIN", "JWT_TOKEN_SECRET"],
       "outputs": ["dist/**"]
     },
     "lint": {
