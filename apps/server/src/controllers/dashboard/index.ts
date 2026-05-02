@@ -2,7 +2,6 @@ import prisma from '@opsflow/db';
 import type {
   DashboardActivityResponse,
   DashboardOverviewResponse,
-  DashboardSummaryResponse,
   UserRole,
 } from '@opsflow/shared';
 import type { Request, Response } from 'express';
