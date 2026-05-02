@@ -1,5 +1,7 @@
 # OpsFlow: Smart Internal Operations System
 
+![OpsFlow](apps/web/public/og.png)
+
 OpsFlow is a lightweight internal operations platform focused on improving task execution clarity, accountability, and visibility.
 
 Instead of feature-heavy task management, it emphasizes structured updates where every task clearly communicates:
@@ -202,9 +204,10 @@ With more time, the following would be added:
 
 - Real-time updates (WebSockets)
 - Task time tracking and estimation
-- Advanced filtering and search
 - Notifications system
 - Better analytics and reporting
+- Project and workspace management
+- Better way to invite users and manage teams
 
 The current system focuses on core execution workflows and leaves room for these enhancements.
 
