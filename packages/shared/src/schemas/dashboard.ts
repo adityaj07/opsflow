@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { userRoleSchema } from './auth';
-import { activityActionTypeSchema } from './tasks';
+import { userRoleSchema } from './auth.js';
+import { activityActionTypeSchema } from './tasks.js';
 
 export const dashboardOverviewResponseSchema = z.object({
   role: userRoleSchema,

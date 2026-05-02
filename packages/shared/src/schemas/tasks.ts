@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { userRoleSchema } from './auth';
+import { userRoleSchema } from './auth.js';
 
 export const taskStatusSchema = z.enum([
   'BACKLOG',

@@ -9,7 +9,7 @@ import {
   signupResponseSchema,
   signUpSchema,
   userRoleSchema,
-} from '../schemas/auth';
+} from '../schemas/auth.js';
 
 export type SignInInput = z.infer<typeof signInSchema>;
 export type SignUpInput = z.infer<typeof signUpSchema>;

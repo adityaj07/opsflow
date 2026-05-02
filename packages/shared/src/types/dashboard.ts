@@ -3,7 +3,7 @@ import {
   dashboardActivityItemSchema,
   dashboardActivityResponseSchema,
   dashboardOverviewResponseSchema,
-} from '../schemas/dashboard';
+} from '../schemas/dashboard.js';
 
 export type DashboardOverviewResponse = z.infer<typeof dashboardOverviewResponseSchema>;
 export type DashboardActivityItem = z.infer<typeof dashboardActivityItemSchema>;

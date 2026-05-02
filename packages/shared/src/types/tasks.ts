@@ -23,7 +23,7 @@ import {
   taskWithUsersSchema,
   updateTaskResponseSchema,
   updateTaskSchema,
-} from '../schemas/tasks';
+} from '../schemas/tasks.js';
 
 export type TaskStatus = z.infer<typeof taskStatusSchema>;
 export type TaskPriority = z.infer<typeof taskPrioritySchema>;

@@ -5,7 +5,7 @@ import {
   getUsersQuerySchema,
   getUsersResponseSchema,
   userListItemSchema,
-} from '../schemas/users';
+} from '../schemas/users.js';
 
 export type CreateUserInput = z.infer<typeof createUserSchema>;
 export type CreateUserResponse = z.infer<typeof createUserResponseSchema>;
