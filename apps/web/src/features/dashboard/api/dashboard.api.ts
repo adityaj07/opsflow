@@ -1,8 +1,4 @@
-import type {
-  DashboardActivityResponse,
-  DashboardOverviewResponse,
-  DashboardSummaryResponse,
-} from '@opsflow/shared';
+import type { DashboardActivityResponse, DashboardOverviewResponse } from '@opsflow/shared';
 
 import { apiClient } from '@/lib/api/client';
 import type { ApiSuccessResponse } from '@/lib/api/types';
