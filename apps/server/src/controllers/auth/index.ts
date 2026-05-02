@@ -180,7 +180,7 @@ export const me = async (req: Request, res: Response) => {
 export const logout = async (_req: Request, res: Response) => {
   res.clearCookie(AUTH_COOKIE_NAME, {
     httpOnly: true,
-    secure: env.NODE_ENV === 'production',
+    secure: true,
     sameSite: 'lax',
     path: '/',
   });
