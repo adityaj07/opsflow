@@ -41,6 +41,8 @@ const serializeTask = (task: {
   lastActivityAt: Date;
   createdAt: Date;
   updatedAt: Date;
+  createdBy?: { name: string } | null;
+  assignedTo?: { name: string } | null;
 }) => ({
   id: task.id,
   title: task.title,
@@ -53,6 +55,8 @@ const serializeTask = (task: {
   lastActivityAt: task.lastActivityAt.toISOString(),
   createdAt: task.createdAt.toISOString(),
   updatedAt: task.updatedAt.toISOString(),
+  ...(task.createdBy?.name ? { createdByName: task.createdBy.name } : {}),
+  ...(task.assignedTo?.name ? { assignedToName: task.assignedTo.name } : {}),
 });
 
 const serializeTaskUpdate = (taskUpdate: {
@@ -113,6 +117,12 @@ const serializeTimelineLog = (log: {
     },
   },
 });
+
+const isTaskUpdateGeneratedLog = (metadata: unknown) => {
+  if (!metadata || typeof metadata !== 'object') return false;
+  const source = (metadata as Record<string, unknown>).source;
+  return source === 'task_update';
+};
 
 export const createTask = async (req: Request, res: Response) => {
   const actor = checkAuthenticated(req);
@@ -205,6 +215,10 @@ export const getTasks = async (req: Request, res: Response) => {
   const [tasks, total] = await prisma.$transaction([
     prisma.task.findMany({
       where: whereConditions,
+      include: {
+        createdBy: { select: { name: true } },
+        assignedTo: { select: { name: true } },
+      },
       orderBy: { lastActivityAt: 'desc' },
       skip,
       take: limit,
@@ -658,7 +672,7 @@ export const getTaskTimeline = async (req: Request, res: Response) => {
   ]);
 
   const timelineItems: TaskTimelineEntry[] = [
-    ...logs.map(log => serializeTimelineLog(log)),
+    ...logs.filter(log => !isTaskUpdateGeneratedLog(log.metadata)).map(log => serializeTimelineLog(log)),
     ...updates.map(update => ({
       type: 'update' as const,
       createdAt: update.createdAt.toISOString(),

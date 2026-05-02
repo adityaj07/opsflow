@@ -31,6 +31,8 @@ export const taskSchema = z.object({
   lastActivityAt: z.string().datetime(),
   createdAt: z.string().datetime(),
   updatedAt: z.string().datetime(),
+  createdByName: z.string().min(1).optional(),
+  assignedToName: z.string().min(1).optional(),
 });
 
 export const taskWithUsersSchema = taskSchema.extend({
