@@ -1,7 +1,7 @@
-import type * as React from "react";
+import type * as React from 'react';
 
-import { Toaster } from "@opsflow/ui/components/sonner";
-import { TooltipProvider } from "@opsflow/ui/components/tooltip";
+import { Toaster } from '@opsflow/ui/components/sonner';
+import { TooltipProvider } from '@opsflow/ui/components/tooltip';
 import {
   isRouteErrorResponse,
   Links,
@@ -9,15 +9,26 @@ import {
   Outlet,
   Scripts,
   ScrollRestoration,
-} from "react-router";
+} from 'react-router';
 
-import "./index.css";
-import type { Route } from "./+types/root";
-import { ThemeProvider } from "./components/theme-provider";
-import { AuthBootstrap } from "./providers/auth-bootstrap";
-import { QueryProvider } from "./providers/query-provider";
+import './index.css';
+import type { Route } from './+types/root';
+import { ThemeProvider } from './components/theme-provider';
+import { AuthBootstrap } from './providers/auth-bootstrap';
+import { QueryProvider } from './providers/query-provider';
 
-export const links: Route.LinksFunction = () => [];
+export const meta: Route.MetaFunction = () => [
+  { title: 'OpsFlow' },
+  { name: 'description', content: 'Smart Internal Operations System' },
+  { property: 'og:image', content: '/og.png' },
+  { property: 'og:type', content: 'website' },
+  { property: 'og:title', content: 'OpsFlow' },
+  { property: 'og:description', content: 'Smart Internal Operations System' },
+];
+
+export const links: Route.LinksFunction = () => [
+  { rel: 'icon', href: '/opsflow-logo1.png', type: 'image/png' },
+];
 
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
@@ -58,13 +69,13 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
-  let message = "Oops!";
-  let details = "An unexpected error occurred.";
+  let message = 'Oops!';
+  let details = 'An unexpected error occurred.';
   let stack: string | undefined;
   if (isRouteErrorResponse(error)) {
-    message = error.status === 404 ? "404" : "Error";
+    message = error.status === 404 ? '404' : 'Error';
     details =
-      error.status === 404 ? "The requested page could not be found." : error.statusText || details;
+      error.status === 404 ? 'The requested page could not be found.' : error.statusText || details;
   } else if (import.meta.env.DEV && error && error instanceof Error) {
     details = error.message;
     stack = error.stack;

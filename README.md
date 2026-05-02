@@ -84,6 +84,12 @@ bun run db:migrate
 # bun run db:push
 ```
 
+Generate Prisma types:
+
+```bash
+bun run db:generate
+```
+
 Seed the initial admin user (uses `apps/server/.env`):
 
 ```bash
